@@ -1,0 +1,29 @@
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+	ch := make(chan string)
+
+	go func() {
+		for i:=0; i<3; i++{
+			time.Sleep(2 * time.Second)
+			ch <- "message"
+		}
+	}()
+
+	for i:=0; i<2; i++{
+		select {
+		case m := <-ch:
+			fmt.Println(m)
+		default:
+			fmt.Println("No message received.")
+		}
+
+		fmt.Println("processing...")
+		time.Sleep(1500 * time.Millisecond)
+	}
+}
